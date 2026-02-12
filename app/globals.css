@@ -1,26 +1,298 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tetris-inspired color palette */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --tetris-cyan: #00f0f0;
+  --tetris-blue: #0000f0;
+  --tetris-orange: #f0a000;
+  --tetris-yellow: #f0f000;
+  --tetris-green: #00f000;
+  --tetris-purple: #a000f0;
+  --tetris-red: #f00000;
+  --bg-dark: #0a0a0f;
+  --bg-grid: #141420;
+  --text-primary: #e0e0e8;
+  --text-secondary: #a0a0b0;
+  --border-color: #2a2a40;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Tetris grid background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(90deg, var(--border-color) 1px, transparent 1px),
+    linear-gradient(var(--border-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Falling tetrominos animation */
+.tetris-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+}
+
+.tetromino {
+  position: absolute;
+  animation: fall linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+/* Block accent borders */
+.block-accent {
+  position: relative;
+}
+
+.block-accent::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, var(--tetris-cyan), var(--tetris-purple));
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
+  border-radius: 2px;
+}
+
+.block-accent:hover::before {
+  opacity: 0.2;
+}
+
+/* Tetris piece decorations */
+.tetris-piece {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin: 0 4px;
+  background: var(--tetris-cyan);
+  box-shadow: 
+    inset -2px -2px 4px rgba(0,0,0,0.3),
+    inset 2px 2px 4px rgba(255,255,255,0.1);
+}
+
+.tetris-piece.orange { background: var(--tetris-orange); }
+.tetris-piece.blue { background: var(--tetris-blue); }
+.tetris-piece.yellow { background: var(--tetris-yellow); }
+.tetris-piece.green { background: var(--tetris-green); }
+.tetris-piece.purple { background: var(--tetris-purple); }
+.tetris-piece.red { background: var(--tetris-red); }
+
+/* Code blocks with Tetris styling */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0, 240, 240, 0.05);
+  border: 1px solid rgba(0, 240, 240, 0.2);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-size: 0.9em;
+}
+
+pre {
+  background: var(--bg-grid);
+  border: 2px solid var(--border-color);
+  border-left: 4px solid var(--tetris-cyan);
+  padding: 1.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Links with Tetris glow */
+a {
+  color: var(--tetris-cyan);
+  text-decoration: none;
+  position: relative;
+  transition: all 0.2s;
+}
+
+a:hover {
+  color: var(--tetris-purple);
+  text-shadow: 0 0 8px rgba(160, 0, 240, 0.5);
+}
+
+/* Tag pills with block styling */
+.tag {
+  background: rgba(0, 240, 240, 0.1);
+  border: 1px solid rgba(0, 240, 240, 0.3);
+  color: var(--tetris-cyan);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2px;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  background: rgba(0, 240, 240, 0.2);
+  border-color: var(--tetris-cyan);
+  box-shadow: 0 0 12px rgba(0, 240, 240, 0.3);
+}
+
+/* Post card with block styling */
+.post-card {
+  background: rgba(20, 20, 32, 0.6);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  padding: 2rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, 
+    var(--tetris-cyan) 0%,
+    var(--tetris-purple) 50%,
+    var(--tetris-orange) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.post-card:hover {
+  border-color: rgba(0, 240, 240, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 240, 240, 0.1);
+  transform: translateY(-2px);
+}
+
+.post-card:hover::before {
+  opacity: 1;
+}
+
+/* Header with block decoration */
+.header-decoration {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1rem;
+}
+
+.header-decoration .block {
+  width: 8px;
+  height: 8px;
+  animation: pulse 2s infinite;
+}
+
+.header-decoration .block:nth-child(1) { background: var(--tetris-cyan); animation-delay: 0s; }
+.header-decoration .block:nth-child(2) { background: var(--tetris-orange); animation-delay: 0.2s; }
+.header-decoration .block:nth-child(3) { background: var(--tetris-yellow); animation-delay: 0.4s; }
+.header-decoration .block:nth-child(4) { background: var(--tetris-green); animation-delay: 0.6s; }
+.header-decoration .block:nth-child(5) { background: var(--tetris-purple); animation-delay: 0.8s; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-grid);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tetris-cyan);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tetris-purple);
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 240, 240, 0.3);
+  color: white;
+}
+
+/* Content container */
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+}
+
+/* Divider */
+.tetris-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 3rem 0;
+  opacity: 0.3;
+}
+
+.tetris-divider::before,
+.tetris-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tetris-cyan), transparent);
+}
+
+.tetris-divider .blocks {
+  display: flex;
+  gap: 4px;
+}
+
+.tetris-divider .blocks .block {
+  width: 6px;
+  height: 6px;
+  background: var(--tetris-cyan);
 }

@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: 'Karim Alweheshy',
-  title: 'Karim Alweheshy - Developer, Builder, Parent',
-  description: 'Thoughts on iOS development, AI, automation, and parenting',
+  title: 'Karim Alweheshy ▓ Code, Blocks & Baby Logs',
+  description: 'Building software through conversation. Thoughts on iOS, AI, automation, and parenting. Tetris-obsessed developer.',
   url: 'https://karim.alweheshy.com',
   author: {
     name: 'Karim Alweheshy',
